@@ -20,15 +20,17 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: api/package-lock.json
 
       - name: Cache node_modules
         id: cache-deps
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: deps-${{ hashFiles('package-lock.json') }}
+          path: api/node_modules
+          key: deps-${{ hashFiles('api/package-lock.json') }}
 
       - name: Install dependencies
+        working-directory: api
         run: npm ci
 
   build:
@@ -39,17 +41,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache-dependency-path: api/package-lock.json
 
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: deps-${{ hashFiles('package-lock.json') }}
+          path: api/node_modules
+          key: deps-${{ hashFiles('api/package-lock.json') }}
 
-      - run: npm run build
+      - name: Build
+        working-directory: api
+        run: npm run build
 
   lint:
     name: Lint Code
@@ -59,17 +65,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache-dependency-path: api/package-lock.json
 
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: deps-${{ hashFiles('package-lock.json') }}
+          path: api/node_modules
+          key: deps-${{ hashFiles('api/package-lock.json') }}
 
-      - run: npm run lint
+      - name: Lint
+        working-directory: api
+        run: npm run lint
 
   test:
     name: Run Tests
@@ -79,21 +89,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache-dependency-path: api/package-lock.json
 
       - name: Restore node_modules cache
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: deps-${{ hashFiles('package-lock.json') }}
+          path: api/node_modules
+          key: deps-${{ hashFiles('api/package-lock.json') }}
 
-      - run: npm run test
+      - name: Run Tests
+        working-directory: api
+        run: npm run test
 
       - name: Upload coverage report
         if: success() && always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage/
+          path: api/coverage/
