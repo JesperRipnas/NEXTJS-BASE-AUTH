@@ -1,9 +1,13 @@
 import { NestFactory } from '@nestjs/core';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppsModule } from './apps.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppsModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  );
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
