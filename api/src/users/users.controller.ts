@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import {
   ICreateUserResponse,
   IUpdateUserResponse,
@@ -34,7 +42,7 @@ export class UsersController {
     };
   }
 
-  @Post(':id')
+  @Patch(':id')
   updateUser(@Body() user: UpdateUserDto): IUpdateUserResponse {
     const updatedUser = this.usersService.updateUser(user);
     return {
