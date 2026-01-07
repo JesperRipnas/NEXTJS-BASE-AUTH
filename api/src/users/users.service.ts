@@ -68,6 +68,7 @@ export class UsersService {
     const updatedUser: IUser = {
       ...user,
       role: 'USER',
+      password: 'default',
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
