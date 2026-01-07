@@ -1,0 +1,13 @@
+{
+    "name": "project",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "start": "docker compose -f docker-compose.dev.yml up --build",
+        "start:detached": "docker compose -f docker-compose.dev.yml up --build -d",
+        "stop": "docker compose -f docker-compose.dev.yml down",
+        "logs": "docker compose -f docker-compose.dev.yml logs -f",
+        "start:api": "npm --prefix ./api run start:dev",
+        "start:client": "npm --prefix ./client run start"
+    }
+}

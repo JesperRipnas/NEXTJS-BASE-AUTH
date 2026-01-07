@@ -8,11 +8,11 @@ export class LoggerMiddleware implements NestMiddleware {
   private readonly enableLogs: boolean;
 
   constructor(private readonly configService: ConfigService) {
-    this.enableLogs = this.configService.get('ENABLE_HTTP_LOGS') ?? false;
+    // this.enableLogs = this.configService.get('ENABLE_HTTP_LOGS') ?? false;
   }
 
   use(req: Request, res: Response, next: NextFunction): void {
-    if (!this.enableLogs) return next();
+    // if (!this.enableLogs) return next();
     const { method, originalUrl } = req;
     const start = Date.now();
 
