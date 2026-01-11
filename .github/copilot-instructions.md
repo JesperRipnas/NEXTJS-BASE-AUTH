@@ -6,6 +6,64 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Prefer type inference when the type is obvious
 - Avoid the `any` type; use `unknown` when type is uncertain
 
+## NESTJS Best Practices
+
+Architecture & Structure
+
+- Use modules to organize features logically
+- Keep controllers thin—delegate business logic to services
+- Use dependency injection via @Injectable() and constructor injection
+- Follow Single Responsibility Principle for each class
+
+Services & Business Logic
+
+- Services handle all business logic and data operations
+- Use providedIn: 'root' for global services
+- Keep services focused on one domain
+
+Controllers
+
+- Keep controllers focused on HTTP request/response handling
+- Use DTOs for request/response validation
+- Apply decorators like @Get(), @Post(), @Body(), @Param()
+- Use guards and pipes for cross-cutting concerns
+
+Validation & DTOs
+
+- Use class-validator and class-transformer
+- Create separate DTOs for CreateDto, UpdateDto, ResponseDto
+- Apply @IsNotEmpty(), @IsEmail(), etc. on DTO properties
+
+Error Handling
+
+- Use built-in HttpException or custom exception filters
+- Create global exception filters for consistent error responses
+- Implement proper HTTP status codes
+
+Database & ORM
+
+- Use TypeORM or Prisma for database operations
+- Implement repository pattern for data access
+- Use transactions for complex operations
+
+Middleware & Guards
+
+- Use guards for authentication/authorization
+- Implement custom pipes for data transformation
+- Use middleware for logging, CORS, etc.
+
+Testing
+
+- Write unit tests for services
+- Use e2e tests for API endpoints
+- Mock dependencies in tests
+
+Performance
+
+- Implement caching where appropriate
+- Use pagination for large datasets
+- Add proper database indexing
+
 ## Angular Best Practices
 
 - Always use standalone components over NgModules
