@@ -4,7 +4,7 @@ import { AuthUser } from './interfaces/auth-user.interface';
 
 @Injectable()
 export class AuthService {
-  async validateUser(loginDto: LoginDto): Promise<AuthUser> {
+  validateUser(loginDto: LoginDto): AuthUser {
     const { username, password } = loginDto;
 
     // MOCK USER, REPLACE WITH FIREBASE LOGIC LATER
