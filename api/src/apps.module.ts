@@ -6,8 +6,6 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { UsersController } from './users/users.controller';
-import { UsersModule } from './users/users.module';
 import { CommonModule } from './common/common.module';
 
 @Module({
@@ -26,10 +24,9 @@ import { CommonModule } from './common/common.module';
       }),
     }),
     AuthModule,
-    UsersModule,
     CommonModule,
   ],
-  controllers: [AuthController, UsersController],
+  controllers: [AuthController],
   providers: [AuthService],
 })
 export class AppsModule implements NestModule {
