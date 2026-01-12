@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger('HTTP');
-  private readonly enableLogs: boolean;
+  private readonly enableLogs: boolean = false;
 
   constructor(private readonly configService: ConfigService) {
     // this.enableLogs = this.configService.get('ENABLE_HTTP_LOGS') ?? false;
