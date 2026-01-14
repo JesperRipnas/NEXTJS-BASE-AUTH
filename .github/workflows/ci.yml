@@ -1,0 +1,172 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  # ============================================================================
+  # API Jobs
+  # ============================================================================
+
+  api-install:
+    name: "[API] Install Dependencies"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install dependencies
+        working-directory: api
+        run: npm ci
+
+  api-build:
+    name: "[API] Build Project"
+    needs: api-install
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: api/package-lock.json
+
+      - name: Build
+        working-directory: api
+        run: npm run build
+
+  api-lint:
+    name: "[API] Lint Code"
+    needs: api-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: api/package-lock.json
+
+      - name: Lint
+        working-directory: api
+        run: npm run lint
+
+  api-test:
+    name: "[API] Run Tests"
+    needs: api-lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: api/package-lock.json
+
+      - name: Run Tests
+        working-directory: api
+        run: npm run test
+
+      - name: Upload coverage report
+        if: success() && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-coverage-report
+          path: api/coverage/
+
+  # ============================================================================
+  # Client Jobs
+  # ============================================================================
+
+  client-install:
+    name: "[Client] Install Dependencies"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
+
+  client-build:
+    name: "[Client] Build Project"
+    needs: client-install
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: client/package-lock.json
+
+      - name: Build
+        working-directory: client
+        run: npm run build
+
+  client-lint:
+    name: "[Client] Lint Code"
+    needs: client-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: client/package-lock.json
+
+      - name: Lint
+        working-directory: client
+        run: npm run lint
+
+  client-test:
+    name: "[Client] Run Tests"
+    needs: client-lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: client/package-lock.json
+
+      - name: Run Tests
+        working-directory: client
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Upload coverage report
+        if: success() && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-coverage-report
+          path: client/coverage/
