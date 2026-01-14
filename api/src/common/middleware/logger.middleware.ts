@@ -14,15 +14,26 @@ export class LoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     // if (!this.enableLogs) return next();
     const { method, originalUrl } = req;
+    const clientIp = this.getClientIp(req);
     const start = Date.now();
 
     res.on('finish', () => {
       const { statusCode } = res;
       const duration = Date.now() - start;
 
-      this.logger.log(`${method} ${originalUrl} ${statusCode} - ${duration}ms`);
+      this.logger.log(
+        `${clientIp} ${method} ${originalUrl} ${statusCode} - ${duration}ms`,
+      );
     });
 
     next();
+  }
+
+  private getClientIp(req: Request): string {
+    return (
+      (req.headers['x-forwarded-for'] as string)?.split(',')[0].trim() ||
+      req.socket.remoteAddress ||
+      'Unknown'
+    );
   }
 }
