@@ -1,5 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, UrlTree } from '@angular/router';
+import {
+  Router,
+  UrlTree,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { authGuard } from './auth.guard';
 import { AuthService } from '../services/auth.service';
 
@@ -28,7 +33,10 @@ describe('authGuard', () => {
     authService.isLoggedIn.and.returnValue(true);
 
     TestBed.runInInjectionContext(() => {
-      const result = authGuard({} as any, {} as any);
+      const result = authGuard(
+        {} as ActivatedRouteSnapshot,
+        {} as RouterStateSnapshot
+      );
 
       expect(result).toBe(true);
       expect(authService.isLoggedIn).toHaveBeenCalled();
@@ -41,7 +49,10 @@ describe('authGuard', () => {
     router.createUrlTree.and.returnValue(urlTree);
 
     TestBed.runInInjectionContext(() => {
-      const result = authGuard({} as any, {} as any);
+      const result = authGuard(
+        {} as ActivatedRouteSnapshot,
+        {} as RouterStateSnapshot
+      );
 
       expect(result).toBe(urlTree);
       expect(authService.isLoggedIn).toHaveBeenCalled();
@@ -53,8 +64,8 @@ describe('authGuard', () => {
     authService.isLoggedIn.and.returnValue(true);
 
     TestBed.runInInjectionContext(() => {
-      authGuard({} as any, {} as any);
-      authGuard({} as any, {} as any);
+      authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
+      authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
 
       expect(authService.isLoggedIn).toHaveBeenCalledTimes(2);
     });

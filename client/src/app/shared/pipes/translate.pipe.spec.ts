@@ -4,6 +4,7 @@ import { TranslationService } from '../services/translation.service';
 
 describe('TranslatePipe', () => {
   let pipe: TranslatePipe;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let translationService: TranslationService;
 
   beforeEach(() => {
