@@ -1,16 +1,45 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './shared/components/header/header.component';
+import { LoginSignupModalComponent } from './shared/components/login-signup-modal/login-signup-modal.component';
+import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
+import { CookieConsentComponent } from './shared/components/cookie-consent/cookie-consent.component';
+import { CommonModule } from '@angular/common';
+import { AuthService } from './shared/services/auth.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
+  imports: [
+    RouterOutlet,
+    HeaderComponent,
+    LoginSignupModalComponent,
+    SidebarComponent,
+    CookieConsentComponent,
+    CommonModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <main class="p-4">
-      <h1 class="text-xl font-bold">Welcome to Base App 🎯</h1>
-      <router-outlet />
-    </main>
-  `,
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent { }
+export class AppComponent {
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+
+  isLoggedIn = computed(() => this.authService.isLoggedIn());
+  showAuthModal = signal(false);
+
+  toggleAuthModal(): void {
+    this.showAuthModal.update((value) => !value);
+  }
+
+  goToProfile(): void {
+    this.showAuthModal.set(false);
+    this.router.navigate(['/profile']);
+  }
+}

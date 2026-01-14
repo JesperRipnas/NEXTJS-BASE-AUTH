@@ -1,0 +1,18 @@
+.dashboard {
+  padding: 1rem;
+}
+
+h1 {
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+p {
+  margin: 0;
+  color: #4b5563;
+}
+
+:host-context(.dark) p {
+  color: #cbd5e1;
+}

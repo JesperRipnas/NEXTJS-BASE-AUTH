@@ -1,0 +1,113 @@
+import { Injectable, signal } from '@angular/core';
+
+// TODO: Move to models folder
+export interface AuthUser {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  verifiedEmail: boolean;
+}
+
+// TODO: Move to models folder
+interface AuthCookie {
+  isLoggedIn: boolean;
+  user: AuthUser | null;
+  expiresAt: number;
+}
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private readonly COOKIE_NAME = 'auth_session';
+  private readonly SESSION_DURATION = 60 * 60 * 1000; // 60 minutes in milliseconds
+  private readonly CONSENT_KEY = 'cookie_consent';
+
+  private readonly _isLoggedIn = signal(false);
+  private readonly _user = signal<AuthUser | null>(null);
+
+  constructor() {
+    this.restoreSession();
+  }
+
+  isLoggedIn(): boolean {
+    return this._isLoggedIn();
+  }
+
+  setLoggedIn(value: boolean): void {
+    this._isLoggedIn.set(value);
+    if (!value) {
+      this._user.set(null);
+      this.clearCookie();
+    } else {
+      this.saveToCookie();
+    }
+  }
+
+  user(): AuthUser | null {
+    return this._user();
+  }
+
+  setUser(user: AuthUser): void {
+    this._user.set(user);
+    this.saveToCookie();
+  }
+
+  logout(): void {
+    this.setLoggedIn(false);
+  }
+
+  private restoreSession(): void {
+    const cookieData = this.getCookie();
+    if (cookieData && cookieData.expiresAt > Date.now()) {
+      this._isLoggedIn.set(cookieData.isLoggedIn);
+      this._user.set(cookieData.user);
+    } else {
+      this.clearCookie();
+    }
+  }
+
+  private saveToCookie(): void {
+    if (!this.hasCookieConsent()) {
+      return;
+    }
+
+    // FAKE DATA FOR TESTING PURPOSES ONLY, WILL BE SESSION KEY OR TOKEN IN REAL IMPLEMENTATION
+    const data: AuthCookie = {
+      isLoggedIn: this._isLoggedIn(),
+      user: this._user(),
+      expiresAt: Date.now() + this.SESSION_DURATION,
+    };
+
+    const expires = new Date(data.expiresAt);
+    document.cookie = `${this.COOKIE_NAME}=${encodeURIComponent(
+      JSON.stringify(data)
+    )}; expires=${expires.toUTCString()}; path=/; SameSite=Strict; Secure`;
+  }
+
+  private getCookie(): AuthCookie | null {
+    const name = this.COOKIE_NAME + '=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(';');
+
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.indexOf(name) === 0) {
+        try {
+          return JSON.parse(cookie.substring(name.length));
+        } catch {
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+
+  private clearCookie(): void {
+    document.cookie = `${this.COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict`;
+  }
+
+  private hasCookieConsent(): boolean {
+    return localStorage.getItem(this.CONSENT_KEY) === 'true';
+  }
+}

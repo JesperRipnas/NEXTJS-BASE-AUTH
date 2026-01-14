@@ -1,0 +1,78 @@
+<aside class="sidebar" [style.display]="isVisible() ? 'flex' : 'none'">
+  <div class="logo-section">
+    <div class="logo-icon">
+      <svg
+        class="logo-svg"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color: #667eea; stop-opacity: 1" />
+            <stop offset="100%" style="stop-color: #764ba2; stop-opacity: 1" />
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="48" fill="url(#logoGradient)" />
+        <text
+          x="50"
+          y="65"
+          font-size="48"
+          font-weight="700"
+          text-anchor="middle"
+          fill="#ffffff"
+          font-family="Arial, sans-serif"
+        >
+          Devnäs
+        </text>
+      </svg>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    @for (section of menuSections(); track section.title) {
+    <div class="menu-section">
+      <div class="section-title">{{ section.title }}</div>
+      @for (item of section.items; track item.label) {
+      <button
+        type="button"
+        class="nav-item"
+        (click)="handleItemClick(item)"
+        [title]="item.translate ? (item.label | translate) : item.label"
+      >
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span class="nav-label">{{
+          item.translate ? (item.label | translate) : item.label
+        }}</span>
+      </button>
+      }
+    </div>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    <button
+      type="button"
+      class="nav-item logout"
+      (click)="logout()"
+      [title]="
+        logoutItem.translate ? (logoutItem.label | translate) : logoutItem.label
+      "
+    >
+      <span class="nav-icon">
+        <svg
+          class="logout-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+          <polyline points="14 7 9 12 14 17" />
+          <line x1="9" y1="12" x2="21" y2="12" />
+        </svg>
+      </span>
+      <span class="nav-label">{{
+        logoutItem.translate ? (logoutItem.label | translate) : logoutItem.label
+      }}</span>
+    </button>
+  </div>
+</aside>

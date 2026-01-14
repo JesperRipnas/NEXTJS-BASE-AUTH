@@ -1,0 +1,20 @@
+<app-header
+  [isLoggedIn]="isLoggedIn()"
+  (loginClick)="toggleAuthModal()"
+  (profileClick)="goToProfile()"
+></app-header>
+
+<app-sidebar></app-sidebar>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+@if (showAuthModal()) {
+<app-login-signup-modal
+  [initialMode]="'login'"
+  (closeModal)="showAuthModal.set(false)"
+></app-login-signup-modal>
+}
+
+<app-cookie-consent></app-cookie-consent>
