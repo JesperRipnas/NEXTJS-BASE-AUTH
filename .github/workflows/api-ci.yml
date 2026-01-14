@@ -1,17 +1,21 @@
-name: CI
+name: API CI
 
 on:
   push:
-    branches: ['**']
+    branches: ["**"]
+    paths:
+      - "api/**"
+      - ".github/workflows/api-ci.yml"
   pull_request:
-    branches: ['**']
+    branches: ["**"]
+    paths:
+      - "api/**"
+      - ".github/workflows/api-ci.yml"
 
 jobs:
   install:
     name: Install Dependencies
     runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.cache-deps.outputs.cache-hit }}
 
     steps:
       - uses: actions/checkout@v4
@@ -19,15 +23,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: api/package-lock.json
-
-      - name: Cache node_modules
-        id: cache-deps
-        uses: actions/cache@v4
-        with:
-          path: api/node_modules
-          key: deps-${{ hashFiles('api/package-lock.json') }}
 
       - name: Install dependencies
         working-directory: api
@@ -37,7 +34,6 @@ jobs:
     name: Build Project
     needs: install
     runs-on: ubuntu-latest
-    if: success()
 
     steps:
       - uses: actions/checkout@v4
@@ -45,13 +41,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: "npm"
           cache-dependency-path: api/package-lock.json
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: api/node_modules
-          key: deps-${{ hashFiles('api/package-lock.json') }}
 
       - name: Build
         working-directory: api
@@ -61,7 +52,6 @@ jobs:
     name: Lint Code
     needs: build
     runs-on: ubuntu-latest
-    if: success()
 
     steps:
       - uses: actions/checkout@v4
@@ -69,13 +59,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: "npm"
           cache-dependency-path: api/package-lock.json
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: api/node_modules
-          key: deps-${{ hashFiles('api/package-lock.json') }}
 
       - name: Lint
         working-directory: api
@@ -83,9 +68,8 @@ jobs:
 
   test:
     name: Run Tests
-    needs: build
+    needs: lint
     runs-on: ubuntu-latest
-    if: success()
 
     steps:
       - uses: actions/checkout@v4
@@ -93,13 +77,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: "npm"
           cache-dependency-path: api/package-lock.json
-
-      - name: Restore node_modules cache
-        uses: actions/cache@v4
-        with:
-          path: api/node_modules
-          key: deps-${{ hashFiles('api/package-lock.json') }}
 
       - name: Run Tests
         working-directory: api
@@ -109,5 +88,5 @@ jobs:
         if: success() && always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
+          name: api-coverage-report
           path: api/coverage/
