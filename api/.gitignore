@@ -41,6 +41,44 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 .env.local
+.env.*
+!.env.example
+
+# Secrets and credentials
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+secrets/
+secrets.json
+config/secrets.*
+.secrets
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+database.json
+
+# Session storage
+sessions/
+*.session
+
+# JWT keys
+*.jwt
+private-key.pem
+public-key.pem
+jwt-*.pem
+
+# OAuth credentials
+oauth-config.json
+client-secrets.json
+
+# API keys
+api-keys.json
+.api-keys
 
 # temp directory
 .temp
