@@ -1,98 +1,332 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# BASE-AUTH-PROJECT
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A full-stack authentication application combining a NestJS API backend with an Angular 20 frontend client.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Project Overview
 
-## Description
+BASE-AUTH-PROJECT is a complete authentication solution featuring user login, registration, profile management, and session handling. The project is organized as a monorepo with separate API and Client applications.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+```
+BASE-AUTH-PROJECT/
+├── api/          # NestJS REST API
+├── client/       # Angular 20 web application
+└── docker-compose.dev.yml
 ```
 
-## Compile and run the project
+## Tech Stack
+
+### Backend (API)
+
+- **Framework**: NestJS 11
+- **Language**: TypeScript 5.7
+- **Runtime**: Node.js
+- **Testing**: Jest, Supertest
+- **Validation**: class-validator, class-transformer
+- **Configuration**: Joi
+
+### Frontend (Client)
+
+- **Framework**: Angular 20
+- **Language**: TypeScript 5.8
+- **Build Tool**: Angular CLI 20
+- **Styling**: CSS with Tailwind utilities
+- **Testing**: Jasmine, Karma
+- **State Management**: Angular Signals
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js v18+
+- npm or yarn
+- Docker & Docker Compose (optional)
+
+### Installation & Development
 
 ```bash
-# development
-$ npm run start
+# Start both API and Client with Docker
+docker-compose -f docker-compose.dev.yml up
 
-# watch mode
-$ npm run start:dev
+# Or manually:
 
-# production mode
-$ npm run start:prod
+# Terminal 1 - Start API
+cd api
+npm install
+npm run start:dev
+
+# Terminal 2 - Start Client
+cd client
+npm install
+npm start
 ```
 
-## Run tests
+**Access:**
+
+- Client: http://localhost:4200
+- API: http://localhost:3000
+
+## API - Quick Reference
+
+### Setup
 
 ```bash
-# unit tests
-$ npm run test
+cd api
+npm install
+npm run start:dev
+```
 
-# e2e tests
-$ npm run test:e2e
+### Available Scripts
 
-# test coverage
-$ npm run test:cov
+- `npm run build` - Build for production
+- `npm run start:dev` - Start with watch mode
+- `npm run start:prod` - Run production build
+- `npm run lint` - Run ESLint with auto-fix
+- `npm run format` - Format code with Prettier
+- `npm test` - Run tests with coverage
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:e2e` - Run end-to-end tests
+
+### Key Features
+
+- User authentication (login/signup)
+- Password and email validation
+- Request logging with IP tracking
+- UUID generation service
+- Comprehensive error handling
+- Data validation with class-validator
+
+### Project Structure
+
+```
+api/src/
+├── main.ts
+├── apps.module.ts
+├── auth/              # Authentication module
+├── users/             # User management
+├── common/            # Shared utilities
+│   ├── middleware/    # Logger middleware
+│   └── uuid/          # UUID service
+├── configs/
+└── db/
+```
+
+### API Endpoints
+
+- `POST /auth/login` - User login
+- `POST /auth/signup` - User registration
+- `GET /users` - Get all users
+- `GET /users/:id` - Get user by ID
+
+### Environment Variables (.env)
+
+```bash
+DATABASE_URL=
+JWT_SECRET=
+SESSION_SECRET=
+CORS_ORIGIN=http://localhost:4200
+```
+
+## Client - Quick Reference
+
+### Setup
+
+```bash
+cd client
+npm install
+npm start
+```
+
+### Available Scripts
+
+- `npm start` - Start development server (http://localhost:4200)
+- `npm run build` - Build for production
+- `npm run watch` - Build in watch mode
+- `npm run lint` - Run ESLint with auto-fix
+- `npm test` - Run unit tests
+
+### Key Features
+
+- User authentication (login/signup modal)
+- User profile management
+- Dark mode support
+- Multi-language support (English/Swedish)
+- Session management with cookies
+- Responsive design
+
+### Project Structure
+
+```
+client/src/
+├── main.ts
+├── app/
+│   ├── app.ts         # Root component
+│   ├── app.routes.ts  # Routing
+│   ├── shared/        # Shared utilities
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── pipes/
+│   │   └── translations/
+│   ├── home/          # Home page
+│   ├── dashboard/     # User dashboard
+│   └── profile/       # User profile
+└── styles.scss
+```
+
+### Components
+
+- **Header** - Navigation with login/logout
+- **LoginSignupModal** - Authentication form
+- **Sidebar** - Navigation menu
+- **CookieConsent** - Cookie banner
+
+### Services
+
+- **AuthService** - User authentication & session management
+- **TranslationService** - Multi-language support
+- **ThemeService** - Dark mode management
+
+## Development Workflow
+
+### Before Committing
+
+**API:**
+
+```bash
+cd api
+npm run lint
+npm run format
+npm run test
+```
+
+**Client:**
+
+```bash
+cd client
+npm run lint
+npm test
+```
+
+### Git Workflow
+
+The project includes comprehensive `.gitignore` files that protect:
+
+- Environment variables (`.env*`)
+- Certificates and keys (`*.pem`, `*.key`, `*.cert`)
+- Secrets and credentials (`secrets/`, `api-keys.json`)
+- Database files (`*.sqlite`, `*.db`)
+- Session storage
+- JWT keys
+
+**Always use `.env.example` files as templates** and never commit actual `.env` files.
+
+## Testing
+
+### API Tests
+
+```bash
+cd api
+npm test              # Unit tests with coverage
+npm run test:watch   # Watch mode
+npm run test:e2e     # End-to-end tests
+```
+
+### Client Tests
+
+```bash
+cd client
+npm test             # Run tests with Karma
 ```
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Production Build
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+**API:**
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+cd api
+npm run build
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+**Client:**
 
-## Resources
+```bash
+cd client
+npm run build
+# Output in dist/client/browser/
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Docker
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Both services have `Dockerfile.dev` for development:
 
-## Support
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Security
 
-## Stay in touch
+### Key Principles
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+✓ Never commit `.env` files or secrets  
+✓ Use `.env.example` for reference  
+✓ Keep dependencies updated  
+✓ Validate all user input  
+✓ Use HTTPS in production  
+✓ Implement rate limiting  
+✓ Use secure session cookies
+
+### Protected Files
+
+- Environment files
+- API keys and credentials
+- JWT signing keys
+- OAuth credentials
+- Database credentials
+- SSL certificates
+
+## Detailed Documentation
+
+- [API README](./api/README.md) - Complete backend documentation
+- [Client README](./client/README.md) - Complete frontend documentation
+
+## Troubleshooting
+
+### Port Already in Use
+
+```bash
+# API (port 3000)
+cd api && npm run start:dev -- --port 3001
+
+# Client (port 4200)
+cd client && ng serve --port 4300
+```
+
+### Clear Node Modules
+
+```bash
+# API
+cd api && rm -rf node_modules package-lock.json && npm install
+
+# Client
+cd client && rm -rf node_modules package-lock.json && npm install
+```
+
+### Docker Issues
+
+```bash
+docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+## Additional Resources
+
+- [Angular Documentation](https://angular.dev)
+- [NestJS Documentation](https://docs.nestjs.com)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- [Angular CLI Reference](https://angular.dev/tools/cli)
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+UNLICENSED
