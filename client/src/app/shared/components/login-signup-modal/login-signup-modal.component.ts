@@ -13,12 +13,13 @@ import { Router } from '@angular/router';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
 import { AuthService } from '../../services/auth.service';
+import { ErrorAlertComponent } from '../error-alert/error-alert.component';
 
 type AuthMode = 'login' | 'signup';
 
 @Component({
   selector: 'app-login-signup-modal',
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, ErrorAlertComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login-signup-modal.component.html',
   styleUrls: ['./login-signup-modal.component.css'],

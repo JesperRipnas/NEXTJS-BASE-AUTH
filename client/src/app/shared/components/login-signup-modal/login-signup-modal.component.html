@@ -114,9 +114,12 @@
           }}</span>
           }
         </div>
+        } @if (isLoginMode() && loginError()) {
+        <app-error-alert
+          [message]="loginError()"
+          type="error"
+        ></app-error-alert>
         }
-
-        <p class="error-message">{{ loginError() | translate }}</p>
 
         <button
           type="submit"
