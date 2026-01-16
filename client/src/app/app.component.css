@@ -13,7 +13,7 @@
   background-color: #ffffff;
 }
 
-:host:has(app-sidebar aside:not([hidden])) .main-content {
+:host:has(app-sidebar .sidebar.visible) .main-content {
   margin-left: 16rem;
 }
 

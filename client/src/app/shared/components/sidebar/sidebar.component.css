@@ -3,7 +3,7 @@
   height: 100vh;
   background: #1f2937;
   color: #ffffff;
-  display: flex;
+  display: none;
   flex-direction: column;
   position: fixed;
   left: 0;
@@ -12,6 +12,10 @@
   padding-top: 0.1rem;
   border-right: 1px solid #111827;
   overflow-y: auto;
+}
+
+.sidebar.visible {
+  display: flex;
 }
 
 .logo-section {
