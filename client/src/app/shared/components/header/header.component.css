@@ -132,7 +132,7 @@
 
 .language-toggle {
   padding: 0.6rem 0.75rem;
-  min-width: 4rem;
+  width: 4rem;
   background: #ffffff;
   color: #000000;
   border: 1px solid #d0d0d0;
@@ -140,9 +140,10 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
 }
 
@@ -165,11 +166,12 @@
   width: 1rem;
   height: 1rem;
   stroke-width: 2;
+  flex-shrink: 0;
 }
 
 .language-text {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.05em;
   user-select: none;
 }
