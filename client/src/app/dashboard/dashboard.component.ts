@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService, AuthUser } from '../shared/services/auth.service';
+import { AuthService } from '../shared/services/auth.service';
+import { AuthUser } from '../auth/models/auth-user.model';
 
 @Component({
   selector: 'app-dashboard',

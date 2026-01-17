@@ -1,20 +1,27 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap, catchError, finalize } from 'rxjs';
+import { AuthUser } from '../../auth/models/auth-user.model';
+import { AuthCookie } from '../../auth/models/auth-cookie.model';
 
-// TODO: Move to models folder
-export interface AuthUser {
+interface LoginRequest {
   username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  birthDate: string;
-  verifiedEmail: boolean;
+  password: string;
 }
 
-// TODO: Move to models folder
-interface AuthCookie {
-  isLoggedIn: boolean;
-  user: AuthUser | null;
-  expiresAt: number;
+interface LoginResponse {
+  success: boolean;
+  user: AuthUser;
+}
+
+interface SignupRequest {
+  username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  birthDate?: string;
+  gender?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -22,9 +29,14 @@ export class AuthService {
   private readonly COOKIE_NAME = 'auth_session';
   private readonly SESSION_DURATION = 60 * 60 * 1000; // 60 minutes in milliseconds
   private readonly CONSENT_KEY = 'cookie_consent';
+  private readonly API_URL = 'http://localhost:3000/auth';
+
+  private readonly http = inject(HttpClient);
 
   private readonly _isLoggedIn = signal(false);
   private readonly _user = signal<AuthUser | null>(null);
+  private readonly _isLoading = signal(false);
+  private readonly _error = signal<string | null>(null);
 
   constructor() {
     this.restoreSession();
@@ -51,6 +63,64 @@ export class AuthService {
   setUser(user: AuthUser): void {
     this._user.set(user);
     this.saveToCookie();
+  }
+
+  isLoading(): boolean {
+    return this._isLoading();
+  }
+
+  error(): string | null {
+    return this._error();
+  }
+
+  clearError(): void {
+    this._error.set(null);
+  }
+
+  login(loginRequest: LoginRequest): Observable<LoginResponse> {
+    this._isLoading.set(true);
+    this._error.set(null);
+
+    return this.http
+      .post<LoginResponse>(`${this.API_URL}/login`, loginRequest)
+      .pipe(
+        tap((response) => {
+          if (response.success && response.user) {
+            this.setLoggedIn(true);
+            this.setUser(response.user);
+          } else {
+            this._error.set('auth.errors.invalidCredentials');
+          }
+        }),
+        catchError((error) => {
+          this._error.set('auth.errors.loginFailed');
+          throw error;
+        }),
+        finalize(() => this._isLoading.set(false))
+      );
+  }
+
+  signup(signupRequest: SignupRequest): Observable<LoginResponse> {
+    this._isLoading.set(true);
+    this._error.set(null);
+
+    return this.http
+      .post<LoginResponse>(`${this.API_URL}/signup`, signupRequest)
+      .pipe(
+        tap((response) => {
+          if (response.success && response.user) {
+            this.setLoggedIn(true);
+            this.setUser(response.user);
+          } else {
+            this._error.set('auth.errors.signupFailed');
+          }
+        }),
+        catchError(() => {
+          this._error.set('auth.errors.signupFailed');
+          throw new Error('Signup failed');
+        }),
+        finalize(() => this._isLoading.set(false))
+      );
   }
 
   logout(): void {

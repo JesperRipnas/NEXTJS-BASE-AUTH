@@ -6,10 +6,13 @@ import {
   input,
   output,
   signal,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
 import { AuthService } from '../../services/auth.service';
@@ -24,10 +27,12 @@ type AuthMode = 'login' | 'signup';
   templateUrl: './login-signup-modal.component.html',
   styleUrls: ['./login-signup-modal.component.css'],
 })
-export class LoginSignupModalComponent {
+export class LoginSignupModalComponent implements OnDestroy {
   translationService = inject(TranslationService);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
+  private readonly destroy$ = new Subject<void>();
+
   initialMode = input<AuthMode>('login');
   closeModal = output<void>();
 
@@ -41,7 +46,8 @@ export class LoginSignupModalComponent {
   confirmPassword = signal('');
   loginError = signal('');
   emailError = signal('');
-  isLoading = signal(false);
+
+  isLoading = computed(() => this.authService.isLoading());
 
   isLoginMode = computed(() => this.mode() === 'login');
   isSignupMode = computed(() => this.mode() === 'signup');
@@ -137,58 +143,60 @@ export class LoginSignupModalComponent {
     this.loginError.set('');
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.isFormValid()) {
       if (this.isLoginMode()) {
         const username = this.email().trim();
         const password = this.password().trim();
 
-        this.isLoading.set(true);
-
-        // Simulate 1 second delay for now until real firebase implementation
-        setTimeout(() => {
-          fetch('http://localhost:3000/auth/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
+        this.authService
+          .login({ username, password })
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.loginError.set('');
+              this.closeModal.emit();
+              this.router.navigate(['/dashboard']);
             },
-            body: JSON.stringify({ username, password }),
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error('Invalid credentials');
-              }
-              return response.json();
-            })
-            .then((data) => {
-              this.isLoading.set(false);
-              if (data.success && data.user) {
-                this.authService.setLoggedIn(true);
-                this.authService.setUser(data.user);
-                this.loginError.set('');
-                this.closeModal.emit();
-                this.router.navigate(['/dashboard']);
-              }
-            })
-            .catch(() => {
-              this.isLoading.set(false);
+            error: () => {
               this.email.set('');
               this.password.set('');
-              this.loginError.set('auth.errors.invalidCredentials');
-            });
-        }, 1000);
+              this.loginError.set(
+                this.authService.error() || 'auth.errors.invalidCredentials'
+              );
+            },
+          });
       } else {
-        console.log('Signup:', {
-          firstName: this.firstName(),
-          lastName: this.lastName(),
-          username: this.username(),
-          gender: this.gender(),
-          email: this.email(),
-          password: this.password(),
-        });
-        // TODO: call auth service to create account
+        this.authService
+          .signup({
+            firstName: this.firstName(),
+            lastName: this.lastName(),
+            username: this.username(),
+            email: this.email(),
+            password: this.password(),
+            birthDate: '',
+            gender: this.gender(),
+          })
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.loginError.set('');
+              this.closeModal.emit();
+              this.router.navigate(['/dashboard']);
+            },
+            error: () => {
+              this.loginError.set(
+                this.authService.error() || 'auth.errors.signupFailed'
+              );
+            },
+          });
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loginWithGoogle(): void {
