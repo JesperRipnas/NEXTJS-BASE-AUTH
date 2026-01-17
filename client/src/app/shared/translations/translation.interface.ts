@@ -24,6 +24,8 @@ export interface Translation {
     errors: {
       invalidEmail: string;
       invalidCredentials: string;
+      loginFailed: string;
+      signupFailed: string;
     };
     login: {
       title: string;

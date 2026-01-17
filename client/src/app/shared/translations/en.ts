@@ -25,7 +25,9 @@ export const en: Translation = {
     orContinueWith: 'Or continue with',
     errors: {
       invalidEmail: 'Please enter a valid email address',
-      invalidCredentials: 'Invalid credentials. Please try again.',
+      invalidCredentials: 'Invalid credentials. Please try again!',
+      loginFailed: 'Login failed. Please try again.',
+      signupFailed: 'Signup failed. Please try again.',
     },
     login: {
       title: 'Log in',

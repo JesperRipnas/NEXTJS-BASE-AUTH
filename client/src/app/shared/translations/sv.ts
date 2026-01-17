@@ -25,7 +25,9 @@ export const sv: Translation = {
     orContinueWith: 'Eller fortsätt med',
     errors: {
       invalidEmail: 'Vänligen ange en giltig e-postadress',
-      invalidCredentials: 'Ogiltiga autentiseringsuppgifter. Försök igen.',
+      invalidCredentials: 'Ogiltiga autentiseringsuppgifter. Försök igen!',
+      loginFailed: 'Inloggningen misslyckades. Försök igen.',
+      signupFailed: 'Registreringen misslyckades. Försök igen.',
     },
     login: {
       title: 'Logga in',
