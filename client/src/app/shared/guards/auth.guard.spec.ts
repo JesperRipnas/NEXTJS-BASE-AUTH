@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import {
   Router,
   UrlTree,
@@ -21,6 +22,7 @@ describe('authGuard', () => {
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
         { provide: Router, useValue: routerSpy },
+        provideHttpClient(),
       ],
     });
 
